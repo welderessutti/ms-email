@@ -10,6 +10,7 @@ public class SchedulingDtoDomainMapper {
         scheduling.setId(schedulingCreatedEventDto.getId());
         scheduling.setPatientId(schedulingCreatedEventDto.getPatientId());
         scheduling.setSchedulingTime(schedulingCreatedEventDto.getSchedulingTime());
+        scheduling.setAppointment(scheduling.isAppointment());
         return scheduling;
     }
 }

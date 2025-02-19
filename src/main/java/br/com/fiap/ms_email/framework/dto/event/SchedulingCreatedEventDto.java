@@ -14,4 +14,5 @@ public class SchedulingCreatedEventDto {
     private Long id;
     private Long patientId;
     private LocalDateTime schedulingTime;
+    private boolean isAppointment;
 }

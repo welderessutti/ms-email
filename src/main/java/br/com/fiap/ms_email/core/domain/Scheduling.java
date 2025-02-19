@@ -8,14 +8,16 @@ public class Scheduling {
     private Long id;
     private Long patientId;
     private LocalDateTime schedulingTime;
+    private boolean isAppointment;
 
     public Scheduling() {
     }
 
-    public Scheduling(Long id, Long patientId, LocalDateTime schedulingTime) {
+    public Scheduling(Long id, Long patientId, LocalDateTime schedulingTime, boolean isAppointment) {
         this.id = id;
         this.patientId = patientId;
         this.schedulingTime = schedulingTime;
+        this.isAppointment = isAppointment;
     }
 
     public Long getId() {
@@ -42,17 +44,25 @@ public class Scheduling {
         this.schedulingTime = schedulingTime;
     }
 
+    public boolean isAppointment() {
+        return isAppointment;
+    }
+
+    public void setAppointment(boolean appointment) {
+        isAppointment = appointment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Scheduling that = (Scheduling) o;
-        return Objects.equals(id, that.id) && Objects.equals(patientId, that.patientId) && Objects.equals(schedulingTime, that.schedulingTime);
+        return isAppointment == that.isAppointment && Objects.equals(id, that.id) && Objects.equals(patientId, that.patientId) && Objects.equals(schedulingTime, that.schedulingTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, patientId, schedulingTime);
+        return Objects.hash(id, patientId, schedulingTime, isAppointment);
     }
 
     @Override
@@ -61,6 +71,7 @@ public class Scheduling {
                 "id=" + id +
                 ", patientId=" + patientId +
                 ", schedulingTime=" + schedulingTime +
+                ", isAppointment=" + isAppointment +
                 '}';
     }
 }
