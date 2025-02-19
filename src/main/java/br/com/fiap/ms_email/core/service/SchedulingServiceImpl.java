@@ -3,8 +3,10 @@ package br.com.fiap.ms_email.core.service;
 import br.com.fiap.ms_email.core.domain.Patient;
 import br.com.fiap.ms_email.core.domain.Scheduling;
 import br.com.fiap.ms_email.core.port.in.SchedulingPortIn;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 
+@Slf4j
 public class SchedulingServiceImpl implements SchedulingPortIn {
 
     EmailService emailService;
@@ -20,6 +22,7 @@ public class SchedulingServiceImpl implements SchedulingPortIn {
     public void composeEmail(Scheduling scheduling) {
         SimpleMailMessage message = new SimpleMailMessage();
         Patient patient = getPatientById(scheduling.getPatientId());
+        log.info("Patient API received: {}", patient);
         message.setTo(patient.getEmail());
         setEmailSubjectAndText(scheduling, message, patient);
         emailService.sendEmail(message);
