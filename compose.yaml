@@ -1,11 +1,16 @@
+networks:
+  hackathon-fiap:
+    name: hackathon-fiap
+    driver: bridge
+
 services:
-  rabbitmq:
+  broker-rabbitmq:
     image: rabbitmq:management
-    container_name: broker-rabbitmq-3
+    container_name: broker-rabbitmq
     restart: always
     ports:
-      - "5674:5672"
-      - "15674:15672"
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
@@ -14,17 +19,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - hackathon-fiap
 
-  app:
+  app-ms-email:
     build: .
     image: welderessutti/ms-email:latest
     container_name: app-ms-email
     depends_on:
-      rabbitmq:
+      broker-rabbitmq:
         condition: service_healthy
     environment:
       SPRING_RABBITMQ_USERNAME: "rabbitmq"
       SPRING_RABBITMQ_PASSWORD: "rabbitmq"
-      SPRING_RABBITMQ_HOST: "rabbitmq"
-      SPRING_MAIL_USERNAME: "YOUR_PASSWORD"
-      SPRING_MAIL_PASSWORD: "YOUR_EMAIL"
+      SPRING_RABBITMQ_HOST: "broker-rabbitmq"
+      SPRING_MAIL_USERNAME: ""
+      SPRING_MAIL_PASSWORD: ""
+    networks:
+      - hackathon-fiap
