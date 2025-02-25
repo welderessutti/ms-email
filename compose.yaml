@@ -26,5 +26,5 @@ services:
       SPRING_RABBITMQ_USERNAME: "rabbitmq"
       SPRING_RABBITMQ_PASSWORD: "rabbitmq"
       SPRING_RABBITMQ_HOST: "rabbitmq"
-      SPRING_MAIL_USERNAME: "welderessutti@gmail.com"
-      SPRING_MAIL_PASSWORD: "mhfb hvad umnv zqet"
+      SPRING_MAIL_USERNAME: "YOUR_PASSWORD"
+      SPRING_MAIL_PASSWORD: "YOUR_EMAIL"
