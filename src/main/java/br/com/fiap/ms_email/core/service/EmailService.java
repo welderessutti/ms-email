@@ -1,20 +1,26 @@
 package br.com.fiap.ms_email.core.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import br.com.fiap.ms_email.core.domain.EmailPattern;
+import br.com.fiap.ms_email.core.domain.Patient;
+import br.com.fiap.ms_email.core.domain.Scheduling;
+import br.com.fiap.ms_email.core.port.out.EmailPortOut;
 
-@Slf4j
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    private final EmailPortOut emailPortOut;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    public EmailService(EmailPortOut emailPortOut) {
+        this.emailPortOut = emailPortOut;
     }
 
-    public void sendEmail(SimpleMailMessage message) {
-        mailSender.send(message);
-        log.info("Email SENT!: {}", message.getSubject());
+    public void composeEmail(Patient patient, Scheduling scheduling) {
+        EmailPattern emailPattern = new EmailPattern();
+        emailPattern.setRecipient(patient.getEmail());
+        emailPattern.setSubjectAndBody(
+                patient.getFullName(),
+                scheduling.getSchedulingTime(),
+                scheduling.isAppointment()
+        );
+        emailPortOut.sendEmail(emailPattern);
     }
 }

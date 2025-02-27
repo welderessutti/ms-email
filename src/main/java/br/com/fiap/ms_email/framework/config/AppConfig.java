@@ -1,10 +1,12 @@
 package br.com.fiap.ms_email.framework.config;
 
 import br.com.fiap.ms_email.core.port.in.SchedulingPortIn;
+import br.com.fiap.ms_email.core.port.out.EmailPortOut;
 import br.com.fiap.ms_email.core.port.out.PatientPortOut;
 import br.com.fiap.ms_email.core.service.EmailService;
 import br.com.fiap.ms_email.core.service.PatientService;
 import br.com.fiap.ms_email.core.service.SchedulingServiceImpl;
+import br.com.fiap.ms_email.infrastructure.adapter.EmailAdapterImpl;
 import br.com.fiap.ms_email.infrastructure.adapter.PatientAdapterImpl;
 import br.com.fiap.ms_email.infrastructure.api.PatientApiClient;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +22,8 @@ public class AppConfig {
     }
 
     @Bean
-    public EmailService emailServiceImpl(JavaMailSender javaMailSender) {
-        return new EmailService(javaMailSender);
+    public EmailService emailServiceImpl(EmailPortOut emailPortOut) {
+        return new EmailService(emailPortOut);
     }
 
     @Bean
@@ -32,5 +34,10 @@ public class AppConfig {
     @Bean
     public PatientPortOut patientAdapterImpl(PatientApiClient patientApiClient) {
         return new PatientAdapterImpl(patientApiClient);
+    }
+
+    @Bean
+    public EmailPortOut emailAdapterImpl(JavaMailSender javaMailSender) {
+        return new EmailAdapterImpl(javaMailSender);
     }
 }

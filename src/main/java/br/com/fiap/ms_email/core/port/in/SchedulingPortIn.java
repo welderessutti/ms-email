@@ -4,5 +4,5 @@ import br.com.fiap.ms_email.core.domain.Scheduling;
 
 public interface SchedulingPortIn {
 
-    void composeEmail(Scheduling scheduling);
+    void getPatientData(Scheduling scheduling);
 }

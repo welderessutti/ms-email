@@ -4,7 +4,6 @@ import br.com.fiap.ms_email.core.domain.Patient;
 import br.com.fiap.ms_email.core.domain.Scheduling;
 import br.com.fiap.ms_email.core.port.in.SchedulingPortIn;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
 
 @Slf4j
 public class SchedulingServiceImpl implements SchedulingPortIn {
@@ -19,46 +18,13 @@ public class SchedulingServiceImpl implements SchedulingPortIn {
     }
 
     @Override
-    public void composeEmail(Scheduling scheduling) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    public void getPatientData(Scheduling scheduling) {
         Patient patient = getPatientById(scheduling.getPatientId());
         log.info("Patient API received: {}", patient);
-        message.setTo(patient.getEmail());
-        setEmailSubjectAndText(scheduling, message, patient);
-        emailService.sendEmail(message);
+        emailService.composeEmail(patient, scheduling);
     }
 
     private Patient getPatientById(Long patientId) {
         return patientService.getPatientById(patientId);
-    }
-
-    private void setEmailSubjectAndText(Scheduling scheduling, SimpleMailMessage message, Patient patient) {
-        if (scheduling.isAppointment()) {
-            message.setSubject(
-                    "Olá "
-                            + patient.getFullName() +
-                            ", sua consulta foi agendada com sucesso!"
-            );
-            message.setText(
-                    "Olá "
-                            + patient.getFullName() +
-                            ", sua consulta foi agendada para "
-                            + scheduling.getSchedulingTime() +
-                            "."
-            );
-        } else {
-            message.setSubject(
-                    "Olá "
-                            + patient.getFullName() +
-                            ", seu exame foi agendado com sucesso!"
-            );
-            message.setText(
-                    "Olá "
-                            + patient.getFullName() +
-                            ", seu exame foi agendado para "
-                            + scheduling.getSchedulingTime() +
-                            "."
-            );
-        }
     }
 }

@@ -7,82 +7,36 @@
     - **[Elton Xavier Souza](https://github.com/eltonxs) - RM 354254**
     - **[Welder Ressutti](https://github.com/welderessutti) - RM 354557**
 
-# Glicare - Sistema de Gerenciamento de Resultado de Exame e Agendamento
+# Glicare - Sistema de Gerenciamento de Resultado de Exame, Diagnóstico e Agendamento
 
-## Microsserviço de Gerenciamento de Diagnóstico
+## Microsserviço de Envio de Email
 
-**Microsserviço desenvolvido por:** Welder Ressutti
+**Desenvolvido por: [Welder Ressutti](https://github.com/welderessutti)**
 
-Sua responsabilidade no sistema **Glicare** é gerenciar diagnósticos, executando operações **CRUD** e processando
-eventos do broker enviados pelo microsserviço de resultados de exames.
+O microsserviço de envio de e-mails no **Glicare** é responsável por processar eventos recebidos do **broker**,
+originados pelo microsserviço de **agendamento de exames e consultas**.
 
-A análise diagnóstica utiliza **IA** para determinar se o paciente precisa de um novo **exame** para controle ou de uma
-**consulta médica** para avaliação, registra o diagnóstico no banco de dados e envia eventos ao broker para o
-microsserviço de agendamento processar.
-
-A persistência dos dados é feita em um banco **PostgreSQL**, com gerenciamento de migração de schemas via **Flyway**.
-
-Exceções personalizadas são tratadas globalmente por **Rest Controller Advice** e **Exception Handler**, garantindo
-respostas padronizadas com **timestamp**, **status code**, **error**, **message** e **path**.
-
-_***Importante**: A funcionalidade de **IA** ainda **não foi implementada** neste MVP, mas faz parte do escopo do
-sistema._
+Ele obtém os dados do paciente, compõe a mensagem e realiza o envio do e-mail de forma automatizada, garantindo a
+comunicação eficiente entre o sistema e os usuários.
 
 ### Fluxo de Dados Mensageria
 
-- **Recebe** a mensagem do **broker** com o resultado do exame.
-- **Aplica** as **regras de negócio** com base nos valores de referência e, com auxílio da **IA**, classifica o
-  resultado como **normal**, **alterado** ou **crítico**.
-- **Registra** o diagnóstico no banco de dados, incluindo **ID do exame, ID do paciente, status do diagnóstico e
-  data/hora**.
-- **Encaminha** a mensagem ao **broker**, direcionando para:
-    - **Canal de agendamento de consulta**, se o status for **crítico**.
-    - **Canal de agendamento de exame**, caso contrário.
-
-#### Valores de referência da HbA1c:
-
-✅ **Normal:** Abaixo de **5,7%**  
-⚠️ **Pré-diabetes:** Entre **5,7% e 6,4%**  
-❌ **Diabetes:** **6,5% ou mais**
-
-### Funcionalidades e Endpoints
-
-#### Criação de Diagnóstico (POST)
-
-**Endpoint:** ``/api/diagnosis``
-
-É realizado validação dos dados, **ID do exame, ID do paciente, resultado do exame, status do diagnóstico (enum)**,
-todos são obrigatórios.
-
-#### Atualização de Paciente (PUT)
-
-**Endpoint:** ``/api/diagnosis/{diagnosisId}``
-
-É realizado validação dos dados, **ID do exame, ID do paciente, resultado do exame, status do diagnóstico (enum)**,
-todos são obrigatórios.
-
-#### Leitura de Paciente (GET)
-
-**Endpoint:** ``/api/diagnosis/{diagnosisId}`` ``/api/diagnosis``
-
-Pode ser obtido o diagnóstico pelo seu **id**. Também é possível obter **todos** os diagnósticos de uma vez.
-
-#### Deleção de Paciente (DELETE)
-
-**Endpoint:** ``/api/diagnosis/{diagnosisId}``
-
-Para deletar um diagnóstico basta passar seu **id** no endpoint.
+- **Consome** a mensagem do **broker** pelo canal de **agendamento de exame** ou **agendamento de consulta**, contendo
+  o **ID do paciente** e a **data/hora do agendamento**.
+- **Solicita** os dados do paciente ao microsserviço de gerenciamento de pacientes via requisição **GET**, para obter o
+  endereço de **e-mail**.
+- **Compõe** a mensagem com base no canal de origem do evento (exame ou consulta), definindo o **destinatário**, o
+  **assunto** e o **corpo do e-mail**.
+- **Envia** o e-mail.
 
 ### Tecnologias
 
 - **Spring Web** – Base para a construção das APIs RESTful do sistema.
-- **Spring Data JPA** – Gerenciamento da persistência de dados e integração com o banco de dados.
-- **PostgreSQL** – Banco de dados relacional utilizado para armazenar as informações do sistema.
 - **Spring Cloud** – Conjunto de ferramentas para facilitar a arquitetura baseada em microsserviços.
 - **Spring Cloud Stream** – Implementação de mensageria para comunicação assíncrona entre microsserviços via RabbitMQ.
 - **RabbitMQ** – Message broker utilizado para integração assíncrona entre os microsserviços.
-- **Flyway** – Controle de versionamento do banco de dados, garantindo migrações seguras.
-- **Spring Validation** – Validação de dados recebidos nas requisições das APIs.
+- **OpenFeign** – Cliente HTTP declarativo para facilitar a comunicação síncrona entre os microsserviços.
+- **Spring Mail** – Módulo para envio de e-mails automáticos de notificações.
 - **Lombok** – Redução de boilerplate no código, simplificando a criação de classes Java.
 
 ### Arquitetura
@@ -116,7 +70,7 @@ git clone https://github.com/welderessutti/api-diagnosis
 ```
 
 Caso não queira clonar o repositório, você pode baixá-lo
-em [GitHub](https://github.com/welderessutti/api-diagnosis).
+em [GitHub](https://github.com/welderessutti/ms-email).
 
 #### Passo 2: Executar a aplicação com Docker
 
@@ -128,14 +82,10 @@ docker compose up -d
 ```
 
 O Docker tentará baixar a imagem no repositório
-do [Docker Hub](https://hub.docker.com/repository/docker/welderessutti/api-diagnosis/general), caso ele não
+do [Docker Hub](https://hub.docker.com/repository/docker/welderessutti/ms-email/general), caso ele não
 encontre a imagem, ele realizará a **build** da aplicação **(.jar)**, criará a imagem e executará os containers
 automaticamente.
 
-Antes do container da aplicação subir, ele aguardará o container do banco de dados **PostgreSQL** estar pronto
-utilizando um **healthcheck**, quando pronto, o container da aplicação inicia, e realizará a migração do banco de dados
-e suas tabelas automaticamente utilizando o **Flyway**, e estará disponível para acesso em:
-
-```
-http://localhost:8080/api/diagnosis
-```
+Antes do container da aplicação subir, ele aguardará o container do broker **RabbitMQ** estar pronto
+utilizando um **healthcheck**, quando pronto, o container da aplicação inicia, e estará pronto para receber os eventos
+do broker.

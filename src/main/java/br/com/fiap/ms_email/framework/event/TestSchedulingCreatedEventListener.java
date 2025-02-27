@@ -24,6 +24,6 @@ public class TestSchedulingCreatedEventListener implements Consumer<SchedulingCr
         log.info("TEST Scheduling received patient id: {}", schedulingCreatedEventDto.getPatientId());
         schedulingCreatedEventDto.setAppointment(false);
         Scheduling scheduling = SchedulingDtoDomainMapper.toScheduling(schedulingCreatedEventDto);
-        schedulingPortIn.composeEmail(scheduling);
+        schedulingPortIn.getPatientData(scheduling);
     }
 }
