@@ -1,8 +1,3 @@
-networks:
-  hackathon-fiap:
-    name: hackathon-fiap
-    driver: bridge
-
 services:
   broker-rabbitmq:
     image: rabbitmq:management
@@ -19,8 +14,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - hackathon-fiap
 
   app-ms-email:
     build: .
@@ -35,5 +28,3 @@ services:
       SPRING_RABBITMQ_HOST: "broker-rabbitmq"
       SPRING_MAIL_USERNAME: ""
       SPRING_MAIL_PASSWORD: ""
-    networks:
-      - hackathon-fiap
