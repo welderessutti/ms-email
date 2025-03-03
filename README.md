@@ -31,6 +31,7 @@ comunicação eficiente entre o sistema e os usuários.
 
 ### Tecnologias
 
+- **Java 17** – Linguagem de programação utilizada no desenvolvimento do sistema.
 - **Spring Web** – Base para a construção das APIs RESTful do sistema.
 - **Spring Cloud** – Conjunto de ferramentas para facilitar a arquitetura baseada em microsserviços.
 - **Spring Cloud Stream** – Implementação de mensageria para comunicação assíncrona entre microsserviços via RabbitMQ.
@@ -38,6 +39,8 @@ comunicação eficiente entre o sistema e os usuários.
 - **OpenFeign** – Cliente HTTP declarativo para facilitar a comunicação síncrona entre os microsserviços.
 - **Spring Mail** – Módulo para envio de e-mails automáticos de notificações.
 - **Lombok** – Redução de boilerplate no código, simplificando a criação de classes Java.
+- **API Patient** – Serviço utilizado para buscar informações de pacientes a partir do ID.
+- **Docker** – Containerização dos microsserviços para facilitar o deploy e a escalabilidade.
 
 ### Arquitetura
 
