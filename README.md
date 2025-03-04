@@ -13,8 +13,9 @@
 
 **Desenvolvido por: [Welder Ressutti](https://github.com/welderessutti)**
 
-O microsserviço de envio de e-mails no **Glicare** é responsável por processar eventos recebidos do **broker**,
-originados pelo microsserviço de **agendamento de exames e consultas**.
+O microsserviço de envio de e-mails no **[Glicare](https://github.com/welderessutti/hackathon-fiap-glicare)** é
+responsável por processar eventos recebidos do **broker**, originados pelo microsserviço de **agendamento de exames e
+consultas**.
 
 Ele obtém os dados do paciente, compõe a mensagem e realiza o envio do e-mail de forma automatizada, garantindo a
 comunicação eficiente entre o sistema e os usuários.
