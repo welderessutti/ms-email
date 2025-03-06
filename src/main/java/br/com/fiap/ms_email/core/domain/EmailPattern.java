@@ -1,6 +1,7 @@
 package br.com.fiap.ms_email.core.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class EmailPattern {
@@ -43,6 +44,8 @@ public class EmailPattern {
     }
 
     public void setSubjectAndBody(String patientFullName, LocalDateTime schedulingTime, boolean isAppointment) {
+        String date = schedulingTime.toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String time = schedulingTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         if (isAppointment) {
             this.setSubject(
                     "Olá "
@@ -52,8 +55,10 @@ public class EmailPattern {
             this.setBody(
                     "Olá "
                             + patientFullName +
-                            ", sua consulta foi agendada para "
-                            + schedulingTime +
+                            ", sua consulta foi agendada para o dia "
+                            + date +
+                            " às "
+                            + time +
                             "."
             );
         } else {
@@ -65,8 +70,10 @@ public class EmailPattern {
             this.setBody(
                     "Olá "
                             + patientFullName +
-                            ", seu exame foi agendado para "
-                            + schedulingTime +
+                            ", seu exame foi agendado para o dia "
+                            + date +
+                            " às "
+                            + time +
                             "."
             );
         }
