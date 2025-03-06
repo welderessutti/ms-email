@@ -81,8 +81,33 @@ em [GitHub](https://github.com/welderessutti/ms-email).
 No terminal, dentro do diretório raíz do projeto (local onde se encontra o arquivo **compose.yaml** da aplicação),
 execute o comando abaixo para subir todos os containers da aplicação:
 
-```bash
+_***Atenção**: Antes de executar o comando, você deve trocar os valores das variáveis de
+ambiente **SPRING_MAIL_USERNAME** e **SPRING_MAIL_PASSWORD** para os valores do seu serviço de envio de email._
+
+#### Windows (PowerShell)
+
+```powershell
+$env:SPRING_MAIL_USERNAME="SEU_EMAIL"; $env:SPRING_MAIL_PASSWORD="SUA_SENHA"; docker compose up -d
+```
+
+#### Windows (CMD)
+
+```cmd
+set SPRING_MAIL_USERNAME=SEU_EMAIL
+```
+
+```cmd
+set SPRING_MAIL_PASSWORD=SUA_SENHA
+```
+
+```cmd
 docker compose up -d
+```
+
+#### Linux ou macOS (Bash)
+
+```bash
+SPRING_MAIL_USERNAME="SEU_EMAIL" SPRING_MAIL_PASSWORD="SUA_SENHA" docker compose up -d
 ```
 
 O Docker tentará baixar a imagem no repositório
